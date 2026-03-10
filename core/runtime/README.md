@@ -1,38 +1,41 @@
 # Runtime
 
-Este módulo contém a base de execução da aplicação.
+This module contains the execution foundation of the application.
 
-## Componentes iniciais
+## Components
 
-- `state_store.py`: fonte única de verdade do estado do runtime
-- `event_bus.py`: barramento simples de eventos em memória
+### `state_store.py`
+Provides the single source of truth for runtime state.
 
-## Objetivo
+### `event_bus.py`
+Provides an in-memory event bus used by the runtime and higher-level layers.
 
-Permitir que camadas como controller, engine e UI conversem de forma desacoplada.
+### `runtime_engine.py`
+Executes selected tasks sequentially using the current runtime state and the task registry.
 
-## Papéis
+## Purpose
 
-### StateStore
-Mantém o estado atual da execução, como:
-- running
-- paused
-- current_task
-- current_action
-- selected_tasks
-- cooldowns
-- fail_streaks
+The runtime layer exists to coordinate execution without coupling business flow to the UI.
 
-### EventBus
-Permite publicar e escutar eventos como:
-- `runtime.started`
-- `runtime.paused`
-- `runtime.stopped`
-- `task.started`
-- `task.finished`
-- `action.failed`
-- `log.info`
+## Responsibilities
 
-## Observação
+- keep runtime state centralized
+- publish runtime and task lifecycle events
+- resolve selected tasks from the registry
+- build task execution context
+- execute tasks in sequence
+- track failures at runtime level
 
-Neste estágio, o módulo ainda não executa o bot. Ele apenas fornece a fundação para o runtime real.
+## Notes
+
+At this stage, the runtime engine executes a single synchronous cycle through the selected tasks.
+
+It does not yet implement:
+
+- background threads
+- infinite execution loop
+- scheduling policies
+- recovery orchestration
+- timing strategies between tasks
+
+Those concerns will be added incrementally after the execution foundation is stable.
