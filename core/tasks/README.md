@@ -23,6 +23,17 @@ Defines the runtime context passed to tasks during execution.
 ### `registry.py`
 Provides the central registry used to register, discover, and retrieve tasks.
 
+### Concrete task stubs
+The module now includes placeholder implementations for:
+
+- `FarmTask`
+- `ScoutTask`
+- `TrainTask`
+- `AllianceHelpTask`
+
+These stubs do not execute real automation yet.
+They establish official task IDs, configuration expectations, and calibration step structure.
+
 ## Design goals
 
 - keep task execution decoupled from the UI
@@ -32,5 +43,5 @@ Provides the central registry used to register, discover, and retrieve tasks.
 
 ## Notes
 
-At this stage, no concrete task implementation is provided yet.
-This module only establishes the task foundation of the product.
+Concrete task implementations are still placeholders at this stage.
+Their purpose is to stabilize the architecture before real automation logic is introduced.
