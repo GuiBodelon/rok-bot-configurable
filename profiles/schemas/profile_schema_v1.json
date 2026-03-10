@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "profile_name": "Meu Setup",
+  "display": {
+    "monitor_resolution": "2560x1440",
+    "windows_scale_percent": 100,
+    "game_language": "pt-BR",
+    "game_window": {
+      "x": 320,
+      "y": 180,
+      "width": 1920,
+      "height": 1080
+    }
+  },
+  "runtime": {
+    "default_confidence": 0.85,
+    "click_mode": "humanized",
+    "capture_screenshot_on_fail": true
+  },
+  "global_regions": {
+    "alliance_help_button": [
+      0,
+      0,
+      120,
+      80
+    ],
+    "search_button": [
+      0,
+      0,
+      120,
+      80
+    ],
+    "march_counter": [
+      0,
+      0,
+      80,
+      40
+    ]
+  },
+  "tasks": {
+    "farm": {
+      "enabled": false,
+      "regions": {
+        "btn_buscar": [
+          0,
+          0,
+          160,
+          60
+        ],
+        "btn_reunir": [
+          0,
+          0,
+          160,
+          60
+        ],
+        "btn_marchar": [
+          0,
+          0,
+          160,
+          60
+        ],
+        "sem_unidades": [
+          0,
+          0,
+          220,
+          80
+        ]
+      },
+      "points": {
+        "search_open": [
+          0,
+          0
+        ]
+      },
+      "assets": {
+        "btn_buscar": "assets/generated/farm/btn_buscar.png",
+        "btn_reunir": "assets/generated/farm/btn_reunir.png",
+        "btn_marchar": "assets/generated/farm/btn_marchar.png",
+        "sem_unidades": "assets/generated/farm/sem_unidades.png"
+      },
+      "settings": {
+        "resource_type": "food",
+        "resource_level": 4
+      }
+    },
+    "train": {
+      "enabled": false,
+      "regions": {},
+      "points": {},
+      "assets": {},
+      "settings": {}
+    },
+    "scout": {
+      "enabled": false,
+      "regions": {},
+      "points": {},
+      "assets": {},
+      "settings": {}
+    },
+    "alliance_help": {
+      "enabled": false,
+      "regions": {},
+      "points": {},
+      "assets": {},
+      "settings": {}
+    }
+  }
+}
