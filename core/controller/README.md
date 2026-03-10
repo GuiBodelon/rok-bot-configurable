@@ -1,26 +1,38 @@
 # Controller
 
-Este módulo contém a camada de orquestração entre interface, profiles e runtime.
+This module contains the orchestration layer between profiles, runtime, and task registration.
 
-## Objetivo
+## Purpose
 
-Centralizar as ações operacionais de alto nível da aplicação, evitando que a UI converse diretamente com serviços de baixo nível.
+The controller centralizes high-level operational actions so that the UI does not need to communicate directly with low-level runtime components.
 
-## Componente atual
+## Current component
 
 ### `bot_controller.py`
-Responsável por:
+Responsible for:
 
-- carregar e recarregar profiles
-- validar pré-execução
-- iniciar runtime
-- pausar runtime
-- retomar runtime
-- parar runtime
-- refletir estado no `StateStore`
-- emitir eventos no `EventBus`
+- loading and reloading profiles
+- unloading the active profile
+- validating runtime execution preconditions
+- starting runtime execution
+- executing a runtime cycle through the runtime engine
+- pausing runtime execution
+- resuming runtime execution
+- stopping runtime execution
+- registering and unregistering tasks
+- exposing registered tasks for future UI and debug usage
+- reflecting runtime changes into the `StateStore`
+- emitting events through the `EventBus`
 
-## Observação
+## Notes
 
-Nesta fase, o controller ainda não executa tasks reais nem loop operacional.
-Ele apenas controla o ciclo de vida lógico do runtime.
+At this stage, the controller executes synchronous runtime cycles through the runtime engine.
+
+It does not yet provide:
+
+- background worker orchestration
+- scheduling policies
+- UI bindings
+- calibration flow integration
+
+Those concerns will be added incrementally after the core execution flow is stable.

@@ -3,23 +3,29 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from core.runtime import EventBus, StateStore
+from core.tasks import TaskRegistry
+from core.tasks.base import TaskContract
+
+from core.runtime import EventBus, RuntimeEngine, RuntimeEngineError, StateStore
 from profiles import ProfileManager, ProfileValidationError
 
 
 class BotControllerError(Exception):
-    """Erro base do controller."""
+    """Base controller error."""
 
 
 class BotController:
     """
-    Camada de orquestração entre UI e runtime.
+    Orchestrates the interaction between profile management, runtime state,
+    task registration, and runtime execution.
 
-    Responsabilidades:
-    - carregar e validar profile
-    - iniciar, pausar, retomar e parar o runtime
-    - refletir mudanças no StateStore
-    - publicar eventos para observadores externos
+    Responsibilities:
+    - load and validate profiles
+    - control runtime lifecycle
+    - expose task registration to higher-level layers
+    - execute runtime cycles through the runtime engine
+    - reflect lifecycle changes in the state store
+    - publish events for external observers
     """
 
     def __init__(
@@ -27,10 +33,18 @@ class BotController:
         profile_manager: Optional[ProfileManager] = None,
         state_store: Optional[StateStore] = None,
         event_bus: Optional[EventBus] = None,
+        task_registry: Optional[TaskRegistry] = None,
+        runtime_engine: Optional[RuntimeEngine] = None,
     ) -> None:
         self.profile_manager = profile_manager or ProfileManager()
         self.state_store = state_store or StateStore()
         self.event_bus = event_bus or EventBus()
+        self.task_registry = task_registry or TaskRegistry()
+        self.runtime_engine = runtime_engine or RuntimeEngine(
+            state_store=self.state_store,
+            event_bus=self.event_bus,
+            task_registry=self.task_registry,
+        )
 
         self._active_profile: Optional[Dict[str, Any]] = None
         self._active_profile_path: Optional[str] = None
@@ -60,16 +74,17 @@ class BotController:
             raise BotControllerError(str(exc)) from exc
         except Exception as exc:
             self._publish_error(
-                "profile.load_failed", f"Falha inesperada ao carregar profile: {exc}"
+                "profile.load_failed",
+                f"Unexpected failure while loading profile: {exc}",
             )
             raise BotControllerError(
-                f"Falha inesperada ao carregar profile: {exc}"
+                f"Unexpected failure while loading profile: {exc}"
             ) from exc
 
         self._active_profile = profile
         self._active_profile_path = str(path)
 
-        profile_name = profile.get("profile_name", "Sem nome")
+        profile_name = profile.get("profile_name", "Unnamed Profile")
         self.state_store.set_profile(profile_name=profile_name, profile_path=str(path))
         self.state_store.set_last_error(None)
 
@@ -86,7 +101,7 @@ class BotController:
 
     def reload_profile(self) -> Dict[str, Any]:
         if not self._active_profile_path:
-            raise BotControllerError("Nenhum profile ativo para recarregar.")
+            raise BotControllerError("No active profile is available to reload.")
 
         return self.load_profile(self._active_profile_path)
 
@@ -104,14 +119,38 @@ class BotController:
             },
         )
 
+    def register_task(self, task: TaskContract) -> None:
+        self.task_registry.register(task)
+
+        self.event_bus.emit(
+            "task.registered",
+            {
+                "task_id": task.id,
+                "display_name": task.display_name,
+            },
+        )
+
+    def unregister_task(self, task_id: str) -> None:
+        self.task_registry.unregister(task_id)
+
+        self.event_bus.emit(
+            "task.unregistered",
+            {
+                "task_id": task_id,
+            },
+        )
+
+    def get_registered_tasks(self) -> List[Dict[str, str]]:
+        return self.task_registry.describe()
+
     def validate_before_run(self, selected_tasks: List[str]) -> List[str]:
         errors: List[str] = []
 
         if self._active_profile is None:
-            errors.append("Nenhum profile foi carregado.")
+            errors.append("No profile has been loaded.")
 
         if not selected_tasks:
-            errors.append("Nenhuma task foi selecionada para execução.")
+            errors.append("No tasks were selected for execution.")
 
         if self._active_profile is not None:
             profile_tasks = self._active_profile.get("tasks", {})
@@ -120,12 +159,21 @@ class BotController:
                 task_data = profile_tasks.get(task_name)
 
                 if task_data is None:
-                    errors.append(f"A task '{task_name}' não existe no profile.")
+                    errors.append(
+                        f"Task '{task_name}' does not exist in the loaded profile."
+                    )
                     continue
 
                 enabled = task_data.get("enabled")
                 if enabled is False:
-                    errors.append(f"A task '{task_name}' está desabilitada no profile.")
+                    errors.append(
+                        f"Task '{task_name}' is disabled in the loaded profile."
+                    )
+
+                if not self.task_registry.has(task_name):
+                    errors.append(
+                        f"Task '{task_name}' is not registered in the runtime."
+                    )
 
         if errors:
             self.state_store.set_last_error("; ".join(errors))
@@ -151,11 +199,11 @@ class BotController:
         state = self.state_store.get_state()
 
         if state.running:
-            raise BotControllerError("O runtime já está em execução.")
+            raise BotControllerError("Runtime is already running.")
 
         errors = self.validate_before_run(selected_tasks)
         if errors:
-            raise BotControllerError("Falha na validação pré-execução.")
+            raise BotControllerError("Pre-run validation failed.")
 
         profile_name = (
             self._active_profile.get("profile_name") if self._active_profile else None
@@ -180,16 +228,43 @@ class BotController:
             },
         )
 
+    def run_cycle(self) -> Dict[str, bool]:
+        if self._active_profile is None:
+            raise BotControllerError(
+                "Cannot run runtime cycle without an active profile."
+            )
+
+        try:
+            results = self.runtime_engine.run_once(profile=self._active_profile)
+        except RuntimeEngineError as exc:
+            self._publish_error("runtime.execution_failed", str(exc))
+            raise BotControllerError(str(exc)) from exc
+        except Exception as exc:
+            self._publish_error(
+                "runtime.execution_failed",
+                f"Unexpected runtime execution failure: {exc}",
+            )
+            raise BotControllerError(
+                f"Unexpected runtime execution failure: {exc}"
+            ) from exc
+
+        self.event_bus.emit(
+            "runtime.cycle_results_available",
+            {
+                "results": results,
+            },
+        )
+
+        return results
+
     def pause(self) -> None:
         state = self.state_store.get_state()
 
         if not state.running:
-            raise BotControllerError(
-                "Não é possível pausar: o runtime não está em execução."
-            )
+            raise BotControllerError("Cannot pause because runtime is not running.")
 
         if state.paused:
-            raise BotControllerError("O runtime já está pausado.")
+            raise BotControllerError("Runtime is already paused.")
 
         self.state_store.set_paused(True)
 
@@ -205,14 +280,10 @@ class BotController:
         state = self.state_store.get_state()
 
         if not state.running:
-            raise BotControllerError(
-                "Não é possível retomar: o runtime não está em execução."
-            )
+            raise BotControllerError("Cannot resume because runtime is not running.")
 
         if not state.paused:
-            raise BotControllerError(
-                "Não é possível retomar: o runtime não está pausado."
-            )
+            raise BotControllerError("Cannot resume because runtime is not paused.")
 
         self.state_store.set_paused(False)
 
@@ -228,7 +299,7 @@ class BotController:
         state = self.state_store.get_state()
 
         if not state.running and not state.paused:
-            raise BotControllerError("Não é possível parar: o runtime não está ativo.")
+            raise BotControllerError("Cannot stop because runtime is not active.")
 
         self.state_store.mark_stopped()
 
