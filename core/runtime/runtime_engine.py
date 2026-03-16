@@ -2,11 +2,10 @@ from __future__ import annotations
 
 from typing import Any, Dict, Optional
 
-from core.tasks.base.task_context import TaskContext
-from core.tasks.registry import TaskRegistry, TaskRegistryError
-
 from core.runtime.event_bus import EventBus
 from core.runtime.state_store import StateStore
+from core.tasks.base.task_context import TaskContext
+from core.tasks.registry import TaskRegistry, TaskRegistryError
 
 
 class RuntimeEngineError(Exception):
@@ -159,7 +158,7 @@ class RuntimeEngine:
             },
         )
 
-        ctx = self._build_task_context(profile)
+        ctx = self._build_task_context(profile=profile, task_id=task_id)
 
         try:
             success = task.run(ctx)
@@ -180,9 +179,10 @@ class RuntimeEngine:
 
         if success:
             self.state_store.clear_fail_streak(task_id)
+            self.state_store.set_current_action("completed")
 
             self.event_bus.emit(
-                "task.finished",
+                "task.completed",
                 {
                     "task_id": task.id,
                     "display_name": task.display_name,
@@ -192,18 +192,19 @@ class RuntimeEngine:
             return True
 
         self.state_store.increment_fail_streak(task_id)
+        self.state_store.set_current_action("failed")
 
         self.event_bus.emit(
-            "task.finished",
+            "task.failed",
             {
                 "task_id": task.id,
                 "display_name": task.display_name,
-                "success": False,
+                "reason": "task_returned_false",
             },
         )
         return False
 
-    def _build_task_context(self, profile: Dict[str, Any]) -> TaskContext:
+    def _build_task_context(self, profile: Dict[str, Any], task_id: str) -> TaskContext:
         return TaskContext(
             profile=profile,
             state_store=self.state_store,
@@ -212,5 +213,7 @@ class RuntimeEngine:
             input_service=self.input_service,
             guard_service=self.guard_service,
             cooldown_service=self.cooldown_service,
-            metadata={},
+            metadata={
+                "task_id": task_id,
+            },
         )
