@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "profile_name": "Meu Setup",
+  "profile_name": "My Setup",
   "display": {
     "monitor_resolution": "2560x1440",
     "windows_scale_percent": 100,
-    "game_language": "pt-BR",
+    "game_language": "en",
     "game_window": {
       "x": 320,
       "y": 180,
@@ -41,25 +41,25 @@
     "farm": {
       "enabled": false,
       "regions": {
-        "btn_buscar": [
+        "search_button": [
           0,
           0,
           160,
           60
         ],
-        "btn_reunir": [
+        "gather_button": [
           0,
           0,
           160,
           60
         ],
-        "btn_marchar": [
+        "march_button": [
           0,
           0,
           160,
           60
         ],
-        "sem_unidades": [
+        "no_units": [
           0,
           0,
           220,
@@ -73,10 +73,10 @@
         ]
       },
       "assets": {
-        "btn_buscar": "assets/generated/farm/btn_buscar.png",
-        "btn_reunir": "assets/generated/farm/btn_reunir.png",
-        "btn_marchar": "assets/generated/farm/btn_marchar.png",
-        "sem_unidades": "assets/generated/farm/sem_unidades.png"
+        "search_button": "assets/generated/farm/search_button.png",
+        "gather_button": "assets/generated/farm/gather_button.png",
+        "march_button": "assets/generated/farm/march_button.png",
+        "no_units": "assets/generated/farm/no_units.png"
       },
       "settings": {
         "resource_type": "food",
