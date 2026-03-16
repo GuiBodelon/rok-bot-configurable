@@ -3,11 +3,10 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from core.runtime.event_bus import EventBus
-from core.runtime.runtime_engine import RuntimeEngine, RuntimeEngineError
-from core.runtime.state_store import StateStore
 from core.tasks import TaskRegistry
 from core.tasks.base import TaskContract
+
+from core.runtime import EventBus, RuntimeEngine, RuntimeEngineError, StateStore
 from profiles import ProfileManager, ProfileValidationError
 
 
@@ -229,17 +228,6 @@ class BotController:
             },
         )
 
-    def start_from_profile(self) -> List[str]:
-        selected_tasks = self.get_selected_tasks_from_profile()
-
-        if not selected_tasks:
-            raise BotControllerError(
-                "The loaded profile does not contain any enabled tasks."
-            )
-
-        self.start(selected_tasks=selected_tasks)
-        return selected_tasks
-
     def run_cycle(self) -> Dict[str, bool]:
         if self._active_profile is None:
             raise BotControllerError(
@@ -375,7 +363,7 @@ class BotController:
         return [
             task_name
             for task_name, task_data in tasks.items()
-            if isinstance(task_data, dict) and task_data.get("enabled") is True
+            if task_data.get("enabled") is True
         ]
 
     def _publish_error(self, event_name: str, message: str, **extra: Any) -> None:
