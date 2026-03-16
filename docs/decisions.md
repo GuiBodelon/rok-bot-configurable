@@ -1,25 +1,25 @@
 # Architectural Decisions
 
 ## ADR-001 — UI Framework
-Escolhido: PySide6
+Selected: PySide6
 
-Motivo:
-- UI desktop mais robusta
-- melhor escalabilidade
-- melhor experiência visual
+Reason:
+- More robust desktop UI
+- Better scalability
+- Better visual experience
 
-## ADR-002 — Perfil por JSON
-Escolhido: JSON versionado
+## ADR-002 — JSON-based profile
+Selected: Versioned JSON
 
-Motivo:
-- simples
-- fácil de editar
-- fácil de migrar
-- ótimo para fase inicial
+Reason:
+- Simple
+- Easy to edit
+- Easy to migrate
+- Great for the initial phase
 
-## ADR-003 — Coordenadas relativas à janela
-Escolhido: tudo relativo à janela do jogo
+## ADR-003 — Window-relative coordinates
+Selected: Everything relative to the game window
 
-Motivo:
-- reduz acoplamento ao monitor
-- melhora portabilidade entre setups
+Reason:
+- Reduces monitor coupling
+- Improves portability across setups

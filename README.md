@@ -1,33 +1,33 @@
 # RoK Bot Configurable
 
-Aplicação desktop para automação configurável no Rise of Kingdoms, com foco em:
+Desktop application for configurable automation in Rise of Kingdoms, focused on:
 
-- interface gráfica
-- perfis por setup
-- calibração guiada
-- runtime controlado
-- tasks modulares
+- graphical interface
+- setup-based profiles
+- guided calibration
+- controlled runtime
+- modular tasks
 
-## Objetivo
+## Goal
 
-Transformar um bot originalmente acoplado a um setup único em um produto desktop configurável e versionado.
+Turn a bot originally coupled to a single machine setup into a configurable, versioned desktop product.
 
-## Stack inicial
+## Initial stack
 
 - Python
 - PySide6
-- JSON para perfis
-- PyInstaller para empacotamento
+- JSON for profiles
+- PyInstaller for packaging
 
-## Estrutura inicial
+## Initial structure
 
-- `app/` bootstrap da aplicação
-- `core/` runtime, controller, tasks e serviços
-- `ui/` interface desktop
-- `calibration/` onboarding e calibração
-- `profiles/` schemas, migrations e armazenamento
-- `docs/` documentação do projeto
+- `app/` application bootstrap
+- `core/` runtime, controller, tasks, and services
+- `ui/` desktop interface
+- `calibration/` onboarding and calibration
+- `profiles/` schemas, migrations, and storage
+- `docs/` project documentation
 
 ## Status
 
-Em arquitetura inicial.
+Currently in the initial architecture phase.

@@ -1,27 +1,27 @@
 # Roadmap
 
-## Fase 1
-- Estruturar core desacoplado de setup
-- Criar schema de perfil
-- Criar contratos base
+## Phase 1
+- Structure a core decoupled from any fixed setup
+- Create the profile schema
+- Create base contracts
 
-## Fase 2
-- Wizard mínimo de calibração
-- Seleção de janela
-- Salvamento de perfil
+## Phase 2
+- Minimum calibration wizard
+- Game window selection
+- Profile persistence
 
-## Fase 3
-- Dashboard MVP
+## Phase 3
+- MVP dashboard
 - Play / Pause / Stop
 - Logs
-- Seleção de tasks
+- Task selection
 
-## Fase 4
-- Debug visual
-- Preview de region
-- Screenshot em falha
+## Phase 4
+- Visual debug
+- Region preview
+- Screenshot capture on failure
 
-## Fase 5
-- Empacotamento
-- Perfis import/export
-- Polimento
+## Phase 5
+- Packaging
+- Profile import/export
+- Polish

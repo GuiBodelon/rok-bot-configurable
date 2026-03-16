@@ -13,19 +13,19 @@ class FarmTask:
         return {
             "enabled": bool,
             "regions": {
-                "btn_buscar": [int, int, int, int],
-                "btn_reunir": [int, int, int, int],
-                "btn_marchar": [int, int, int, int],
-                "sem_unidades": [int, int, int, int],
+                "search_button": [int, int, int, int],
+                "gather_button": [int, int, int, int],
+                "march_button": [int, int, int, int],
+                "no_units": [int, int, int, int],
             },
             "points": {
                 "search_open": [int, int],
             },
             "assets": {
-                "btn_buscar": str,
-                "btn_reunir": str,
-                "btn_marchar": str,
-                "sem_unidades": str,
+                "search_button": str,
+                "gather_button": str,
+                "march_button": str,
+                "no_units": str,
             },
             "settings": {
                 "resource_type": str,
@@ -37,22 +37,22 @@ class FarmTask:
         return [
             {
                 "type": "region",
-                "key": "btn_buscar",
+                "key": "search_button",
                 "label": "Select the search button region",
             },
             {
                 "type": "region",
-                "key": "btn_reunir",
+                "key": "gather_button",
                 "label": "Select the gather button region",
             },
             {
                 "type": "region",
-                "key": "btn_marchar",
+                "key": "march_button",
                 "label": "Select the march button region",
             },
             {
                 "type": "region",
-                "key": "sem_unidades",
+                "key": "no_units",
                 "label": "Select the no-units warning region",
             },
             {

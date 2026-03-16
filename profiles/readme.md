@@ -1,19 +1,19 @@
 # Profiles
 
-Esta pasta contém a base de configuração do produto.
+This folder contains the product configuration foundation.
 
-## Objetivo
+## Goal
 
-Desacoplar o bot do setup fixo da máquina, permitindo que cada usuário possua seu próprio perfil de execução.
+Decouple the bot from a fixed machine setup, allowing each user to have their own execution profile.
 
-## Estrutura
+## Structure
 
-- `schemas/`: schemas versionados do profile
-- `storage/`: profiles salvos localmente
-- `manager.py`: carregamento, persistência e validação básica
+- `schemas/`: versioned profile schemas
+- `storage/`: locally saved profiles
+- `manager.py`: loading, persistence, and basic validation
 
-## Regras
+## Rules
 
-- todo profile deve possuir `schema_version`
-- coordenadas e regions devem evoluir para formato relativo à janela do jogo
-- cada task terá configuração própria dentro de `tasks`
+- every profile must define `schema_version`
+- coordinates and regions should evolve toward a game-window-relative format
+- each task will have its own configuration under `tasks`

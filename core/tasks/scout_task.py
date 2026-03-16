@@ -13,11 +13,10 @@ class ScoutTask:
         return {
             "enabled": bool,
             "regions": {
-                "gatilho_scout": [int, int, int, int],
-                "btn_abrir_menu": [int, int, int, int],
-                "btn_explorar_painel": [int, int, int, int],
-                "btn_explorar_mapa": [int, int, int, int],
-                "btn_enviar": [int, int, int, int],
+                "open_menu_button": [int, int, int, int],
+                "explore_panel_button": [int, int, int, int],
+                "explore_map_button": [int, int, int, int],
+                "send_button": [int, int, int, int],
             },
             "points": {},
             "assets": {},
@@ -28,27 +27,22 @@ class ScoutTask:
         return [
             {
                 "type": "region",
-                "key": "gatilho_scout",
-                "label": "Select the scout trigger region",
-            },
-            {
-                "type": "region",
-                "key": "btn_abrir_menu",
+                "key": "open_menu_button",
                 "label": "Select the scout menu button region",
             },
             {
                 "type": "region",
-                "key": "btn_explorar_painel",
-                "label": "Select the panel explore button region",
+                "key": "explore_panel_button",
+                "label": "Select the explore button region in the panel",
             },
             {
                 "type": "region",
-                "key": "btn_explorar_mapa",
-                "label": "Select the map explore button region",
+                "key": "explore_map_button",
+                "label": "Select the explore button region on the map",
             },
             {
                 "type": "region",
-                "key": "btn_enviar",
+                "key": "send_button",
                 "label": "Select the send button region",
             },
         ]

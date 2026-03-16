@@ -1,28 +1,28 @@
 ---
 name: Bug report
-about: Reportar um problema
+about: Report a bug
 title: "[BUG] "
 labels: bug
 assignees: ""
 ---
 
-## Descrição
-Descreva o problema.
+## Description
+Describe the issue.
 
-## Passos para reproduzir
+## Steps to reproduce
 1.
 2.
 3.
 
-## Comportamento esperado
-Descreva o esperado.
+## Expected behavior
+Describe the expected behavior.
 
-## Evidências
-Logs, screenshots, contexto.
+## Evidence
+Logs, screenshots, context.
 
-## Ambiente
-- SO:
-- Resolução:
-- Escala:
-- Idioma do jogo:
-- Perfil usado:
+## Environment
+- OS:
+- Resolution:
+- Scale:
+- Game language:
+- Profile used:

@@ -1,21 +1,21 @@
 ---
 name: Feature request
-about: Propor uma nova funcionalidade
+about: Request a new feature
 title: "[FEATURE] "
 labels: enhancement
 assignees: ""
 ---
 
-## Descrição
-Descreva a funcionalidade.
+## Description
+Describe the feature.
 
-## Objetivo
-Qual problema isso resolve?
+## Goal
+What problem does this solve?
 
-## Escopo inicial
-Liste o mínimo necessário.
+## Initial scope
+List the minimum necessary scope.
 
-## Critérios de aceite
+## Acceptance criteria
 - [ ]
 - [ ]
 - [ ]

@@ -1,12 +1,12 @@
-## O que foi feito
+## What was done
 
-Descreva objetivamente o que esta PR entrega.
+Describe objectively what this PR delivers.
 
-## Motivo
+## Why
 
-Por que essa alteração foi necessária?
+Why was this change necessary?
 
-## Escopo
+## Scope
 
 - [ ] Core
 - [ ] UI
@@ -15,10 +15,10 @@ Por que essa alteração foi necessária?
 - [ ] Docs
 - [ ] Tests
 
-## Como testar
+## How to test
 
-Descreva o passo a passo de validação.
+Describe the validation steps.
 
-## Observações
+## Notes
 
-Pontos importantes, limitações ou próximos passos.
+Important points, limitations, or next steps.
