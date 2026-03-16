@@ -1,46 +1,43 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Dict, List
-
-from core.tasks.base import TaskContext
 
 from core.controller import BotController
+from core.tasks import AllianceHelpTask, FarmTask, ScoutTask, TrainTask
 
 
-class DummyTask:
-    id = "dummy"
-    display_name = "Dummy Task"
+class DummyVisionService:
+    def region_exists(self, region):
+        return bool(region)
 
-    def config_schema(self) -> Dict[str, Any]:
-        return {}
 
-    def calibration_steps(self) -> List[Dict[str, Any]]:
-        return []
-
-    def validate_config(self, profile: Dict[str, Any]) -> List[str]:
-        return []
-
-    def is_enabled(self, profile: Dict[str, Any]) -> bool:
-        return True
-
-    def run(self, ctx: TaskContext) -> bool:
-        ctx.emit("dummy.executed", {"task_id": self.id})
-        return True
+class DummyInputService:
+    def click_region(self, region, click_mode="humanized"):
+        return bool(region) and isinstance(click_mode, str)
 
 
 def main() -> None:
     controller = BotController()
-    controller.register_task(DummyTask())
 
-    profile_path = Path("profiles/storage/example.profile.json")
+    controller.runtime_engine.vision_service = DummyVisionService()
+    controller.runtime_engine.input_service = DummyInputService()
+
+    controller.register_task(FarmTask())
+    controller.register_task(ScoutTask())
+    controller.register_task(TrainTask())
+    controller.register_task(AllianceHelpTask())
+
+    profile_path = Path("profiles/storage/example.json")
     controller.load_profile(profile_path)
 
-    controller.start(selected_tasks=["dummy"])
-    results = controller.run_cycle()
-    controller.stop()
+    selected_tasks = controller.start_from_profile()
+    print("Selected tasks:", selected_tasks)
 
-    print(results)
+    results = controller.run_cycle()
+    print("Cycle results:", results)
+
+    controller.stop()
+    print("Final state:", controller.get_runtime_state())
 
 
 if __name__ == "__main__":
